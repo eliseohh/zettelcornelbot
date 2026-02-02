@@ -238,3 +238,21 @@ Cuando Antigravity retome el proyecto debe:
    - qué optimiza
    - qué no toca
 
+## 10. Roadmap: TDAH Active Focus (v1.1)
+
+El siguiente paso NO es solo rendimiento gráfico, sino **Cognición Activa**.
+El usuario requiere un sistema que **inicie la interacción**.
+
+### Especificación Funcional
+1.  **Scheduler Loop**:
+    - Goroutine en `cmd/bot/main.go`.
+    - Ticker: 30 minutos (ajustable por `/config`).
+2.  **Modos de Operación**:
+    - **Work Mode**: "¿Sigues enfocado?" -> Log en Daily Note.
+    - **Rest Mode**: Sugerencia de Ideas (Graph Rot).
+3.  **Persistencia**:
+    - Tabla `user_state` (singleton) para guardar `last_ping`, `current_task`, `work_mode_enabled`.
+
+⚠️ **Prioridad**: Implementar Scheduler LIGERO en Go antes de meter toda la complejidad gráfica de Metal.
+La lógica de negocio TDAH tiene precedencia sobre la visualización.
+
