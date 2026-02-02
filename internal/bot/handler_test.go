@@ -62,6 +62,26 @@ func TestBotHandlers(t *testing.T) {
 		}
 	})
 
+	// Test 1.1: Note Create with Folder (Libro)
+	t.Run("Note Create Folder", func(t *testing.T) {
+		ctx := &MockContext{PayloadVal: "create libro My Book"}
+		if err := b.handleNote(ctx); err != nil {
+			t.Fatal(err)
+		}
+
+		msg := ctx.SentMsg.(string)
+		if !strings.Contains(msg, "libro/") {
+			t.Errorf("Expected folder path, got: %s", msg)
+		}
+
+		// Verify file exists in subfolder
+		date := time.Now().Format("20060102")
+		expectedPath := filepath.Join(tmpDir, "libro", date+"-my-book.md")
+		if _, err := os.Stat(expectedPath); os.IsNotExist(err) {
+			t.Error("File not created in subfolder")
+		}
+	})
+
 	// Test 2: Cue Add Strictness
 	t.Run("Cue Add Invalid", func(t *testing.T) {
 		// Needs an existing note ID first. from prev test: date-test-note
@@ -101,6 +121,18 @@ func TestBotHandlers(t *testing.T) {
 		ctx := &MockContext{PayloadVal: "link " + src + " " + tgt}
 		if err := b.handleNote(ctx); err != nil {
 			t.Error(err)
+			// Test 4: Status Tree
+			t.Run("Status Tree", func(t *testing.T) {
+				ctx := &MockContext{PayloadVal: ""}
+				if err := b.handleStatus(ctx); err != nil {
+					t.Error(err)
+				}
+
+				msg := ctx.SentMsg.(string)
+				if !strings.Contains(msg, "🌳 **Zettelkasten Status**") {
+					t.Errorf("Expected tree header, got: %s", msg)
+				}
+			})
 		}
 
 		msg := ctx.SentMsg.(string)

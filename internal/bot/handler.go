@@ -76,12 +76,28 @@ func (b *Bot) handleNote(c tele.Context) error {
 	action := strings.ToLower(args[0])
 	switch action {
 	case "create":
-		// /note create <Title...>
+		// /note create <Category?> <Title...>
 		if len(args) < 2 {
-			return c.Send("Usage: /note create <Title>")
+			return c.Send("Usage: /note create [category] <Title>")
 		}
-		title := strings.Join(args[1:], " ")
-		return b.noteCreate(c, title)
+
+		// Heuristic: If >1 args, and first arg is known category
+		var category = "idea"
+		var titleStart = 1
+
+		firstArg := strings.ToLower(args[1])
+		knownCategories := map[string]bool{"idea": true, "estudio": true, "libro": true, "tarea": true}
+
+		if knownCategories[firstArg] {
+			category = firstArg
+			titleStart = 2
+			if len(args) < 3 {
+				return c.Send(fmt.Sprintf("Usage: /note create %s <Title>", category))
+			}
+		}
+
+		title := strings.Join(args[titleStart:], " ")
+		return b.noteCreate(c, title, category)
 
 	case "validate":
 		// /note validate <ID>
@@ -127,12 +143,23 @@ func (b *Bot) handleCue(c tele.Context) error {
 
 // -- Implementations --
 
-func (b *Bot) noteCreate(c tele.Context, title string) error {
+func (b *Bot) noteCreate(c tele.Context, title, category string) error {
 	// Generate Filename: YYYYMMDD-kebab-title.md
 	dateStr := time.Now().Format("20060102")
 	kebab := toKebab(title)
 	filename := fmt.Sprintf("%s-%s.md", dateStr, kebab)
-	path := filepath.Join(b.cfg.RootDir, filename)
+
+	// Determine Path (Folder)
+	var targetDir string
+	if category == "idea" {
+		targetDir = b.cfg.RootDir
+	} else {
+		targetDir = filepath.Join(b.cfg.RootDir, category)
+		if err := os.MkdirAll(targetDir, 0755); err != nil {
+			return c.Send(fmt.Sprintf("FS Error: %v", err))
+		}
+	}
+	path := filepath.Join(targetDir, filename)
 
 	// Ensure atomic: Check if exists
 	if _, err := os.Stat(path); err == nil {
@@ -141,7 +168,7 @@ func (b *Bot) noteCreate(c tele.Context, title string) error {
 
 	content := fmt.Sprintf(`# %s
 Fecha: %s
-Tipo: idea
+Tipo: %s
 
 ## Notas
 
@@ -154,13 +181,17 @@ Tipo: idea
 
 ## Enlaces
 
-`, title, time.Now().Format("2006-01-02"))
+`, title, time.Now().Format("2006-01-02"), category)
 
 	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
 		return c.Send(fmt.Sprintf("FS Error: %v", err))
 	}
 
-	return c.Send(fmt.Sprintf("✅ Created: `%s`", filename))
+	relPath := filename
+	if category != "idea" {
+		relPath = filepath.Join(category, filename)
+	}
+	return c.Send(fmt.Sprintf("✅ Created: `%s`", relPath))
 }
 
 func (b *Bot) noteValidate(c tele.Context, id string) error {
@@ -265,10 +296,32 @@ func (b *Bot) cueAdd(c tele.Context, id, question string) error {
 // Helpers
 
 func (b *Bot) handleStatus(c tele.Context) error {
-	// Keep status purely for DB stats
+	// Query Category Counts
+	rows, err := b.db.Query("SELECT tag, COUNT(*) FROM tags GROUP BY tag ORDER BY COUNT(*) DESC")
+	if err != nil {
+		return c.Send(fmt.Sprintf("⛔ DB Error: %v", err))
+	}
+	defer rows.Close()
+
+	var totalNodes int
+	b.db.QueryRow("SELECT COUNT(*) FROM nodes").Scan(&totalNodes)
+
+	sb := strings.Builder{}
+	sb.WriteString(fmt.Sprintf("🌳 **Zettelkasten Status**\n\n"))
+	sb.WriteString(fmt.Sprintf("📂 **Root** (%d notas)\n", totalNodes))
+
+	var tag string
 	var count int
-	b.db.QueryRow("SELECT COUNT(*) FROM nodes").Scan(&count)
-	return c.Send(fmt.Sprintf("Nodes: %d", count))
+	for rows.Next() {
+		rows.Scan(&tag, &count)
+		// Tree styling
+		sb.WriteString(fmt.Sprintf(" ├── 🏷️ **%s**: %d\n", strings.Title(tag), count))
+	}
+
+	// Add footer generic
+	sb.WriteString("\n_Physical structure ready for Metal/PNG mapping._")
+
+	return c.Send(sb.String(), &tele.SendOptions{ParseMode: tele.ModeMarkdown})
 }
 
 func (b *Bot) resolvePath(id string) (string, error) {

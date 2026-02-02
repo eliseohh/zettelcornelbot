@@ -123,8 +123,9 @@ Define la estructura de datos que Go enviará a C/Swift.
 
 typedef struct {
     vector_float2 position;
-    vector_float4 color;
+    vector_float4 color; // Mapeado desde 'Tipo' (Libro=Azul, Idea=Amarillo, etc)
     float size;
+    // int typeID; // Opcional para filtrado en shader
 } NodeVertex;
 
 typedef struct {
