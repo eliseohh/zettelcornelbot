@@ -24,6 +24,20 @@ cd zettelcornelbot
 make run
 ```
 
+## 1.2 Verificación de Arranque
+
+Al ejecutar `make run`, el sistema debe reportar:
+
+```text
+✅ CUMPLIMIENTO VERIFICADO
+✅ Ollama is RUNNING
+✅ Telegram Token found
+PASS: TestBotHandlers
+🚀 Starting zettelbot...
+```
+
+Si algún paso falla, corregir antes de intentar la migración a Metal.
+
 ## 2. Activación de Módulos Latentes
 
 Actualmente, los siguientes módulos son **STUBS** (marcadores de posición) en Linux. Deben implementarse nativamente en macOS.
