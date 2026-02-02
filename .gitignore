@@ -1,0 +1,28 @@
+# Binaries
+zettelbot
+*.exe
+*.test
+*.out
+
+# Databases (SQLite is local state only)
+*.db
+*.db-journal
+*.sqlite
+
+# Testing Artifacts
+test_vault/
+test_ops/
+internal/index/test_vault/
+test_valid.md
+test_invalid_cue.md
+test_long_title.md
+cmd/test_bot_mock/test.db
+
+# IDES / System
+.DS_Store
+.vscode/
+.idea/
+
+# Go
+vendor/
+go.sum
