@@ -25,4 +25,4 @@ cmd/test_bot_mock/test.db
 
 # Go
 vendor/
-go.sum
+
