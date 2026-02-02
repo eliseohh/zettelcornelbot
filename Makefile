@@ -11,6 +11,8 @@ help:
 	@echo "make services  : Check external dependencies (Ollama, Env)"
 	@echo "make clean     : Remove artifacts"
 
+check: test
+
 all: check build
 
 # --- 1. Service Verification ---

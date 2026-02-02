@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/markdown"
+	"github.com/eliseohh/zettelcornelbot/internal/markdown"
 )
 
 type Indexer struct {

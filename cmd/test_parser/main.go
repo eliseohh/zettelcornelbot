@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/markdown"
+	"github.com/eliseohh/zettelcornelbot/internal/markdown"
 )
 
 func main() {

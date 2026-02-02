@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/neural"
+	"github.com/eliseohh/zettelcornelbot/internal/neural"
 	tele "gopkg.in/telebot.v3"
 )
 

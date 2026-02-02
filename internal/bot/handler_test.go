@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/index"
+	"github.com/eliseohh/zettelcornelbot/internal/index"
 	tele "gopkg.in/telebot.v3"
 )
 

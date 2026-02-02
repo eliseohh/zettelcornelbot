@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/neural"
+	"github.com/eliseohh/zettelcornelbot/internal/neural"
 )
 
 func main() {

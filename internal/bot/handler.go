@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/index"
-	"github.com/eliseohenriquez/zettelcornelbot/internal/markdown"
+	"github.com/eliseohh/zettelcornelbot/internal/index"
+	"github.com/eliseohh/zettelcornelbot/internal/markdown"
 	tele "gopkg.in/telebot.v3"
 )
 

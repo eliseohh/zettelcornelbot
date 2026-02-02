@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/eliseohenriquez/zettelcornelbot/internal/bot"
-	"github.com/eliseohenriquez/zettelcornelbot/internal/index"
+	"github.com/eliseohh/zettelcornelbot/internal/bot"
+	"github.com/eliseohh/zettelcornelbot/internal/index"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/eliseohenriquez/zettelcornelbot
+module github.com/eliseohh/zettelcornelbot
 
 go 1.25.5
 
