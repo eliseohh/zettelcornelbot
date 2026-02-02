@@ -13,6 +13,17 @@ swift --version                     # Requerido Swift 6.0+
 go version                          # Requerido Go 1.22+ (darwin/arm64)
 ```
 
+## 1.1 Inicio Rápido (Setup)
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/eliseohh/zettelcornelbot.git
+cd zettelcornelbot
+
+# 2. Verificar integridad y levantar servicios
+make run
+```
+
 ## 2. Activación de Módulos Latentes
 
 Actualmente, los siguientes módulos son **STUBS** (marcadores de posición) en Linux. Deben implementarse nativamente en macOS.
